@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Energy Optimizer</title>
+    <!-- Use Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons for premium icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="dark-theme">
+    <!-- Animated Background Effects -->
+    <div class="bg-effects">
+        <canvas id="bg-canvas"></canvas>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-overlay">
+        <div class="spinner">
+            <i class="ph-fill ph-lightning"></i>
+        </div>
+        <div class="loader-text">Initializing AI Engine...</div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar glass-panel">
+            <div class="logo">
+                <i class="ph-fill ph-lightning"></i>
+                <span>Nexus AI</span>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard">
+                    <i class="ph ph-squares-four"></i> Dashboard
+                </li>
+                <li data-target="insights">
+                    <i class="ph ph-brain"></i> AI Insights
+                </li>
+                <li data-target="devices">
+                    <i class="ph ph-cpu"></i> Devices
+                </li>
+                <li data-target="impact">
+                    <i class="ph ph-plant"></i> Impact
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header glass-panel">
+                <div class="page-title">
+                    <h1 id="greeting-title">Good Morning,Devika</h1>
+                    <p class="subtitle" id="current-page-title">Dashboard Overview</p>
+                </div>
+                <div class="header-actions">
+                    <div class="notification-badge" id="alert-btn">
+                        <i class="ph ph-bell"></i>
+                        <span class="badge pulse"></span>
+                    </div>
+                    <!-- Theme Toggle Switch -->
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle" checked>
+                        <span class="slider round">
+                            <i class="ph ph-sun sun-icon"></i>
+                            <i class="ph ph-moon moon-icon"></i>
+                        </span>
+                    </label>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Error+squad&background=0D8ABC&color=fff" alt="User">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Notifications Sidebar Panel -->
+            <div id="notifications-panel" class="notifications-panel glass-panel">
+                <div class="panel-header">
+                    <h2>AI Alerts & History</h2>
+                    <button id="close-panel-btn" class="icon-btn"><i class="ph ph-x"></i></button>
+                </div>
+                <div class="panel-content" id="notification-history">
+                    <!-- Populated by JS -->
+                    <div class="empty-state">No recent alerts. AI is monitoring normally.</div>
+                </div>
+            </div>
+
+            <!-- Notification Toast -->
+            <div id="toast-container" class="toast-container"></div>
+
+            <!-- Page Container where content is injected -->
+            <div id="page-content" class="page-content">
+                <!-- Dashboard Section -->
+                <section id="section-dashboard" class="page-section active">
+                    <div class="summary-cards">
+                        <div class="glass-card summary-card">
+                            <div class="card-icon"><i class="ph ph-lightning"></i></div>
+                            <div class="card-info">
+                                <h3>Current Usage</h3>
+                                <p class="value" id="current-usage-val">34.2 <span class="unit">kWh</span></p>
+                                <p class="trend up"><i class="ph ph-trend-up"></i> +2.4% vs yesterday</p>
+                            </div>
+                        </div>
+                        <div class="glass-card summary-card">
+                            <div class="card-icon"><i class="ph ph-currency-dollar"></i></div>
+                            <div class="card-info">
+                                <h3>Est. Cost</h3>
+                                <p class="value" id="est-cost-val">$142.50</p>
+                                <p class="trend down"><i class="ph ph-trend-down"></i> -$12.30 saved by AI</p>
+                            </div>
+                        </div>
+                        <div class="glass-card summary-card">
+                            <div class="card-icon"><i class="ph ph-cloud-rain"></i></div>
+                            <div class="card-info">
+                                <h3>Carbon Footprint</h3>
+                                <p class="value" id="carbon-val">120 <span class="unit">kg CO₂</span></p>
+                                <p class="trend down"><i class="ph ph-trend-down"></i> -5% optimized</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="glass-card main-chart-card">
+                            <div class="chart-header">
+                                <h2>Real-Time Energy Consumption</h2>
+                                <span class="live-indicator"><span class="dot"></span> Live</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="realTimeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="glass-card donut-chart-card">
+                            <div class="chart-header">
+                                <h2>Device Wise Usage</h2>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="donutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Insights Section -->
+                <section id="section-insights" class="page-section hidden">
+                    <div class="insights-grid">
+                        <div class="glass-card main-chart-card">
+                            <div class="chart-header">
+                                <h2>AI Predictive Usage (Next 7 Days)</h2>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="predictiveChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="ai-recommendations">
+                            <h2 class="section-title"><i class="ph-fill ph-magic-wand"></i> Automated Recommendations
+                            </h2>
+                            <div class="rec-list" id="ai-recs-container">
+                                <!-- Populated by JS dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Smart Automation / Devices Section -->
+                <section id="section-devices" class="page-section hidden">
+                    <div class="automation-header glass-card">
+                        <div>
+                            <h2 class="section-title">Smart Automation Panel</h2>
+                            <p class="subtitle">Manage constraints and intelligent device scheduling.</p>
+                        </div>
+                        <div class="automation-actions">
+                            <button id="shutdown-unused-btn" class="action-btn apply-btn shutdown-btn">
+                                <i class="ph-bold ph-power"></i> Shutdown Unused
+                            </button>
+                            <div class="ai-mode-toggle">
+                                <span class="ai-label blue"><i class="ph-fill ph-magic-wand"></i> AI Auto-Control</span>
+                                <label class="theme-switch toggle-switch-large">
+                                    <input type="checkbox" id="ai-mode-toggle" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="devices-grid mt-2" id="devices-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Impact Section -->
+                <section id="section-impact" class="page-section hidden">
+                    <div class="impact-stats">
+                        <div class="glass-card impact-card pulse-glow">
+                            <div class="impact-icon green"><i class="ph-fill ph-tree"></i></div>
+                            <h3>Trees Equivalent</h3>
+                            <p class="impact-val animated-counter" data-target="42">0</p>
+                            <p class="impact-desc">Trees planted to offset current usage</p>
+                        </div>
+                        <div class="glass-card impact-card pulse-glow">
+                            <div class="impact-icon blue"><i class="ph-fill ph-drop"></i></div>
+                            <h3>Water Saved</h3>
+                            <p class="impact-val"><span class="animated-counter" data-target="1240">0</span>L</p>
+                            <p class="impact-desc">Through optimized cooling systems</p>
+                        </div>
+                    </div>
+                    <div class="glass-card main-chart-card mt-2">
+                        <div class="chart-header">
+                            <h2>Cumulative AI Optimization Impact</h2>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="impactChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <!-- Chatbot Floating Button -->
+    <div id="chatbot-btn" class="chatbot-btn glass-panel pulse-glow">
+        <i class="ph-fill ph-chat-teardrop-dots"></i>
+        <span>Support</span>
+    </div>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot-window" class="chatbot-window glass-panel hidden">
+        <div class="chat-header">
+            <h3><i class="ph-fill ph-robot"></i> AI Support</h3>
+            <button id="close-chat-btn" class="icon-btn"><i class="ph ph-x"></i></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">Hello! I am Nexus, your AI Energy Assistant. How can I help you optimize your
+                facility today?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Ask about your energy usage...">
+            <button id="send-chat-btn"><i class="ph-fill ph-paper-plane-right"></i></button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
